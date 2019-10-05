@@ -1,24 +1,27 @@
 export class UUID {
 	constructor() {
 		this.uuids = []
+
+		this.create = this.create.bind(this)
+		this.unique = this.unique.bind(this)
 	}
 
 	create() {
-		let guid
+		let uuid
 
 		do {
-			guid = this.generate()
+			uuid = this.generate()
 		} while(this.unique(uuid))
 
-		return guid
+		return uuid
 	}
 
 	unique(uuid) {
 		if (!!~this.uuids.indexOf(uuid)) {
-			return false
+			return true
 		} else {
 			this.uuids.push(uuid)
-			return true
+			return false
 		}
 	}
 
