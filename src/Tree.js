@@ -96,10 +96,6 @@ export class Tree {
 		}
 	}
 
-	toJSON() {
-		return _.cloneDeep(this.$_root)
-	}
-
 	belongs(node) {
 		return node instanceof Node && this.$_treeId === node.$_treeId // ToDo: добавить поиск по дереву для проверки
 	}
