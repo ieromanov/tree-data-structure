@@ -45,6 +45,12 @@ export default class Node {
 		return obj
 	}
 
+	set parent(parent) {
+		if (!(parent instanceof Node)) throw new Error('Parent must be only Node')
+		if (!~parent.indexOf(this)) throw new Error('This parent does not have child nodes such as this', this)
+		this.$_parent = parent
+	}
+
 	// Если в data пришел объект, переписать его свойства в this
 	_initData(data) {
 		if(isObject(data)) {
@@ -63,6 +69,8 @@ export default class Node {
 		(isArray(data) && data[0] instanceof Node)
 			? this.$_children.push(...data)
 			: data instanceof Node && this.$_children.push(data)
+		
+		return data
 	}
 	// Удаляет сам себя из родительского массива
 	remove() {

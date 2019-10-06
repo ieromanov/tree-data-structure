@@ -13,7 +13,9 @@ export class Tree {
 	constructor(data, guidGenerator) {
 		this.$_guidGenerator = guidGenerator || uuid.create
 		this.$_treeId = this.$_guidGenerator()
+
 		this.$_root = data ? new Node(data, this.$_guidGenerator(), this.$_treeId) : null
+		data && this._parse(data, this.$_root)
 	}
 
 	get root() {
@@ -29,28 +31,36 @@ export class Tree {
 	}
 
 	// Поиск в глубину по дереву
-	_depthSearch(callback) {
-		(function recursion(currentNode) {
-			for (var i = 0, length = currentNode.children.length; i < length; i++) {
-				recursion(currentNode.children[i]);
+	_depthSearch(next, data, reverse) {
+		const recursion = currentNode => {
+			reverse && next(currentNode)
+
+			if (currentNode.children) {
+				for (var i = 0, length = currentNode.children.length; i < length; i++) {
+					recursion(currentNode.children[i]);
+				}
 			}
 
-			callback(currentNode);
-		})(this.$_root);
+			!reverse && next(currentNode);
+		}
+		recursion(data)
 	}
 
 	// Поиск в ширину по дереву
-	_breadthSearch(next) {
+	_breadthSearch(next, data, reverse) {
 		const queue = new Queue();
 	
-		queue.enqueue(this.$_root);
+		queue.enqueue(data);
 		let currentTree = queue.dequeue();
 	
-		while(next(currentTree)){
-			for (let i = 0, length = currentTree.children.length; i < length; i++) {
-				queue.enqueue(currentTree.children[i]);
+		while(currentTree && next(currentTree)){
+			if (currentTree.children) {
+				for (let i = 0, length = currentTree.children.length; i < length; i++) {
+					queue.enqueue(currentTree.children[i]);
+				}
 			}
-			currentTree = queue.dequeue();
+
+			currentTree = queue.dequeue(reverse);
 		}
 	}
 
@@ -66,12 +76,15 @@ export class Tree {
 		}
 	}
 
-	_applyToNode(callback, traversal) {
-		traversal.call(this, callback);
+	_applyToNode(traversal, next, ...args) {
+		this._selectTraverseMethod(traversal).call(this, next, ...args);
 	};
 
-	_parse(data) {
-
+	_parse(data, parent) {
+		data.children && data.children.forEach(child => {
+			const childNode = parent.add(new Node(child, this.$_guidGenerator(), this.$_treeId, parent))
+			this._parse(child, childNode)
+		})
 	}
 
 	add(data, parent, addAllByOne = false) {
@@ -94,6 +107,27 @@ export class Tree {
 		} else {
 			throw new Error('Parent does not exist.');
 		}
+	}
+	
+	getAllDataByKey(key) {
+		const search = (key, data, result = []) => {
+			try {
+				Object.keys(this.$_root).forEach((prop) => {
+					if(prop === key){
+						result.push(data[prop]);
+						return result;
+					}
+					if(typeof data[prop] === 'object'){
+						search(key, data[prop], result);
+					}
+				});
+				return result;
+			} catch(error) {
+				console.error(error)
+			}
+		};
+
+		return search(key, this.$_root)
 	}
 
 	belongs(node) {
