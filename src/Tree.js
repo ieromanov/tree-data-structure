@@ -30,7 +30,12 @@ export class Tree {
 		return this.$_treeId
 	}
 
-	// Поиск в глубину по дереву
+	/**
+	 * Поиск в глубину по дереву
+	 * @param { function } next - функция 
+	 * @param { Node } data - дерево, по которому нужно искать
+	 * @param { boolean } reverse - искать в обратном порядке
+	 */
 	_depthSearch(next, data, reverse) {
 		const recursion = currentNode => {
 			reverse && next(currentNode)
@@ -46,7 +51,12 @@ export class Tree {
 		recursion(data)
 	}
 
-	// Поиск в ширину по дереву
+	/**
+	 * Поиск в ширину по дереву
+	 * @param { function } next - функция 
+	 * @param { Node } data - дерево, по которому нужно искать
+	 * @param { boolean } reverse - искать в обратном порядке
+	 */
 	_breadthSearch(next, data, reverse) {
 		const queue = new Queue();
 	
@@ -64,6 +74,10 @@ export class Tree {
 		}
 	}
 
+	/**
+	 * 
+	 * @param { string } traversal - как искать по дереву, в ширину или глубину. bf или df
+	 */
 	_selectTraverseMethod(traversal) {
 		switch (traversal.toLowerCase()) {
 			case 'bf':
@@ -76,34 +90,55 @@ export class Tree {
 		}
 	}
 
+	/**
+	 * 
+	 * @param { string } traversal - выбор поиска, в ширину или глубину
+	 * @param { function } next - функция, принимающая Node и возвращающая boolean(продалжать поиск или нет)
+	 * @param  { ...any } args 
+	 */
 	_applyToNode(traversal, next, ...args) {
 		this._selectTraverseMethod(traversal).call(this, next, ...args);
 	};
 
+	/**
+	 * 
+	 * @param { object } data - древовидная структура, дочерние элементы в свойстве children
+	 * @param { Node } parent - узел, куда будет достраиваться дерево
+	 */
 	_parse(data, parent) {
 		data.children && data.children.forEach(child => {
-			const childNode = parent.add(new Node(child, this.$_guidGenerator(), this.$_treeId, parent))
+			const childNode = parent.$add(new Node(child, this.$_guidGenerator(), this.$_treeId, parent))
 			this._parse(child, childNode)
 		})
 	}
 
+	/**
+	 * 
+	 * @param { any } data - данные, которые нужно добавить
+	 * @param { Node } parent - ссылка на элемент в который нужно добавить 
+	 * @param { boolean } addAllByOne - добавить массив элементов, как дочерние элементы по одному
+	 */
 	add(data, parent, addAllByOne = false) {
 		if (!parent) throw new Error('parent(second argument) require argument')
 
 		if (addAllByOne) {
 			if (!isArray(data)) throw new Error('To add multiple items one at a "data" argument must be an array')
 			const children = data.map((nodeData) => new Node(nodeData, this.$_guidGenerator(), this.$_treeId, parent))
-			parent.add(children);
+			parent.$add(children);
 			return children
 		} else {
-			parent.add(new Node(data, this.$_guidGenerator(), this.$_treeId, parent));
+			parent.$add(new Node(data, this.$_guidGenerator(), this.$_treeId, parent));
 			return child
 		}
 	}
 
+	/**
+	 * 
+	 * @param { Node } nodeToRemove - ссылка на элемент, который нужно удалить
+	 */
 	remove(nodeToRemove) {
 		if (nodeToRemove) {
-			nodeToRemove.remove()
+			nodeToRemove.$remove()
 		} else {
 			throw new Error('Parent does not exist.');
 		}
@@ -114,14 +149,14 @@ export class Tree {
 			try {
 				Object.keys(data).forEach((prop) => {
 					if(prop === key){
-						result.push(data[prop]);
-						return result;
+						result.push(data[prop])
+						return result
 					}
-					if(typeof data[prop] === 'object'){
-						search(key, data[prop], result);
+					if(isObject(data[prop])){
+						search(key, data[prop], result)
 					}
 				});
-				return result;
+				return result
 			} catch(error) {
 				console.error(error)
 			}
@@ -130,6 +165,30 @@ export class Tree {
 		return search(key, this.$_root)
 	}
 
+	/**
+	 * 
+	 * @param { string | number } data 
+	 * @param { string } key 
+	 * @param { boolean } isDeepSearch 
+	 * @param { boolean } onlyFirst 
+	 */
+	searchNodeByData(data, key, isDeepSearch = true, onlyFirst = false) {
+		let searchedNode = []
+		const next = node => {
+			if (node[key] === data) {
+				searchedNode.push(node)
+				return !onlyFirst
+			}
+			return true
+		}
+		this._applyToNode(isDeepSearch ? 'df' : 'bf', next, this.$_root)
+		return searchedNode
+	}
+
+	/**
+	 * 
+	 * @param { Node } node - проверка, принадлизит ли переданный узел дереву
+	 */
 	belongs(node) {
 		return node instanceof Node && this.$_treeId === node.$_treeId // ToDo: добавить поиск по дереву для проверки
 	}

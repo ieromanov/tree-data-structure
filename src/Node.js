@@ -17,9 +17,11 @@ export default class Node {
 		this.$_pathIds = parent ? [ ...parent.$_pathIds, parent.$_id ] : []
 		this.$_children = []
 
-		this._initData(data)
+		this.$initData(data)
 
-		this.belongs = this.belongs.bind(this)
+		this.$add = this.$add.bind(this)
+		this.$remove = this.$remove.bind(this)
+		this.$belongs = this.$belongs.bind(this)
 	}
 
 	get children () {
@@ -38,7 +40,7 @@ export default class Node {
 	get toObject() {
 		let obj = {}
 		for (let property in this) {
-			if (!property.includes('$_')) {
+			if (!property.includes('$')) {
 				obj[property] = this[property]
 			}
 		}
@@ -52,7 +54,7 @@ export default class Node {
 	}
 
 	// Если в data пришел объект, переписать его свойства в this
-	_initData(data) {
+	$initData(data) {
 		if(isObject(data)) {
 			for (let property in data) {
 				if (property !== 'children') {
@@ -65,7 +67,7 @@ export default class Node {
 	}
 
 	// Добавляет элемент типа Node в дочерние элементы
-	add(data) {
+	$add(data) {
 		(isArray(data) && data[0] instanceof Node)
 			? this.$_children.push(...data)
 			: data instanceof Node && this.$_children.push(data)
@@ -73,7 +75,7 @@ export default class Node {
 		return data
 	}
 	// Удаляет сам себя из родительского массива
-	remove() {
+	$remove() {
 		if (this.$_parent) {
 			this.$_parent.$_children = this.$_parent.$_children.filter(node => node.$_id !== this.$_id)
 		} else {
@@ -82,7 +84,7 @@ export default class Node {
 	}
 
 	// Является ли переданный узел дочерним данному узлу
-	belongs(node) {
+	$belongs(node) {
 		return node instanceof Node && this.$_children.some(child => child.$_id === node.$_id)
 	}
 }
