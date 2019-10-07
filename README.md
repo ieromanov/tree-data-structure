@@ -2,12 +2,14 @@
 
 javascript library for build tree structure
 
-## build
+## Development
+
+### build
 ```bash
 npm run build
 ```
 
-## start dev server
+### start dev server
 ```bash
 npm run dev
 ```
