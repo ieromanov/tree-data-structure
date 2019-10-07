@@ -82,7 +82,7 @@ export class Tree {
 
 	_parse(data, parent) {
 		data.children && data.children.forEach(child => {
-			const childNode = parent.add(new Node(child, this.$_guidGenerator(), this.$_treeId, parent))
+			const childNode = parent.$add(new Node(child, this.$_guidGenerator(), this.$_treeId, parent))
 			this._parse(child, childNode)
 		})
 	}
@@ -93,17 +93,17 @@ export class Tree {
 		if (addAllByOne) {
 			if (!isArray(data)) throw new Error('To add multiple items one at a "data" argument must be an array')
 			const children = data.map((nodeData) => new Node(nodeData, this.$_guidGenerator(), this.$_treeId, parent))
-			parent.add(children);
+			parent.$add(children);
 			return children
 		} else {
-			parent.add(new Node(data, this.$_guidGenerator(), this.$_treeId, parent));
+			parent.$add(new Node(data, this.$_guidGenerator(), this.$_treeId, parent));
 			return child
 		}
 	}
 
 	remove(nodeToRemove) {
 		if (nodeToRemove) {
-			nodeToRemove.remove()
+			nodeToRemove.$remove()
 		} else {
 			throw new Error('Parent does not exist.');
 		}
