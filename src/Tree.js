@@ -114,13 +114,14 @@ export class Tree {
 			try {
 				Object.keys(data).forEach((prop) => {
 					if(prop === key){
-						result.push(data[prop]);
-						return result;
+						result.push(data[prop])
+						return result
 					}
 					if(isObject(data[prop])){
+						search(key, data[prop], result)
 					}
 				});
-				return result;
+				return result
 			} catch(error) {
 				console.error(error)
 			}
