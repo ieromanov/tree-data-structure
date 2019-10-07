@@ -130,6 +130,19 @@ export class Tree {
 		return search(key, this.$_root)
 	}
 
+	searchNodeByData(data, key, isDeepSearch = true, onlyFirst = false) {
+		let searchedNode = []
+		const next = node => {
+			if (node[key] === data) {
+				searchedNode.push(node)
+				return !onlyFirst
+			}
+			return true
+		}
+		this._applyToNode(isDeepSearch ? 'df' : 'bf', next, this.$_root)
+		return searchedNode
+	}
+
 	belongs(node) {
 		return node instanceof Node && this.$_treeId === node.$_treeId // ToDo: добавить поиск по дереву для проверки
 	}
