@@ -112,7 +112,7 @@ export class Tree {
 	getAllDataByKey(key) {
 		const search = (key, data, result = []) => {
 			try {
-				Object.keys(this.$_root).forEach((prop) => {
+				Object.keys(data).forEach((prop) => {
 					if(prop === key){
 						result.push(data[prop]);
 						return result;
