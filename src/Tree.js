@@ -117,8 +117,7 @@ export class Tree {
 						result.push(data[prop]);
 						return result;
 					}
-					if(typeof data[prop] === 'object'){
-						search(key, data[prop], result);
+					if(isObject(data[prop])){
 					}
 				});
 				return result;
