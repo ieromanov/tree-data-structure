@@ -6,6 +6,7 @@
 	"scripts": {
 		"build": "node build.js",
 		"dev": "webpack-dev-server --inline --progress --config config/dev.config.js",
+		"test": "jest --verbose ./test"
 	},
 	"author": "IERomanov",
 	"license": "ISC",
