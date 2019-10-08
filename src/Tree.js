@@ -127,7 +127,8 @@ export class Tree {
 			parent.$add(children);
 			return children
 		} else {
-			parent.$add(new Node(data, this.$_guidGenerator(), this.$_treeId, parent));
+			const child = new Node(data, this.$_guidGenerator(), this.$_treeId, parent)
+			parent.$add(child);
 			return child
 		}
 	}
@@ -147,14 +148,13 @@ export class Tree {
 	getAllDataByKey(key) {
 		const search = (key, data, result = []) => {
 			try {
-				Object.keys(data).forEach((prop) => {
+				Object.keys(data).forEach(prop => {
 					if(prop === key){
 						result.push(data[prop])
-						return result
 					}
-					if(isObject(data[prop])){
-						search(key, data[prop], result)
-					}
+					data[prop] && data[prop].children.forEach(obj => {
+						search(key, obj, result)
+					})
 				});
 				return result
 			} catch(error) {
