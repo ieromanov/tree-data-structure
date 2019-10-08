@@ -1,6 +1,6 @@
 const signale = require('signale')
 const webpack = require('webpack')
-const config = require('./config/webpack.config')
+const config = require('./config/prod.config')
 
 signale.start('start build...')
 
