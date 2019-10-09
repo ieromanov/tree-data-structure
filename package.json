@@ -1,7 +1,7 @@
 {
 	"name": "tree",
 	"version": "0.1.0",
-	"description": "build tree stucture",
+	"description": "build tree structure",
 	"main": "/src/index.js",
 	"scripts": {
 		"build": "node build.js",
