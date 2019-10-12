@@ -10,3 +10,10 @@ test('should create uuid', () => {
 	expect(typeof uuid).toBe('string')
 	expect(uuid.length).toEqual(36)
 })
+
+test('should check uuid on unique', () => {
+	const uuidCreator = new UUID()
+	expect(uuidCreator.exist(1)).toBeFalsy()
+	expect(uuidCreator.uuids.length).toEqual(1)
+	expect(uuidCreator.exist(1)).toBeTruthy()
+})
