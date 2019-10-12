@@ -3,7 +3,7 @@ export class UUID {
 		this.uuids = []
 
 		this.create = this.create.bind(this)
-		this.unique = this.unique.bind(this)
+		this.exist = this.exist.bind(this)
 	}
 
 	create() {
@@ -11,13 +11,13 @@ export class UUID {
 
 		do {
 			uuid = this.generate()
-		} while(this.unique(uuid))
+		} while(this.exist(uuid))
 
 		return uuid
 	}
 
-	unique(uuid) {
-		if (!!~this.uuids.indexOf(uuid)) {
+	exist(uuid) {
+		if (this.uuids.includes(uuid)) {
 			return true
 		} else {
 			this.uuids.push(uuid)
