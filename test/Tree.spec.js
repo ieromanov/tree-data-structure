@@ -89,7 +89,6 @@ test('should search node(s) by data', () => {
 	expect(node2.key).toEqual(224411)
 })
 
-
 test('should the node belongs to the tree', () => {
 	const tree = new Tree({
 		name: 'root',
