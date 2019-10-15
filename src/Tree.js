@@ -10,11 +10,11 @@ const uuid = new UUID()
  * @param { function } guidGenerator - Функция которая возвращает guid
  */
 export class Tree {
-	constructor(data, guidGenerator) {
-		this.$_guidGenerator = guidGenerator || uuid.create
-		this.$_treeId = this.$_guidGenerator()
+	constructor(data, uuidGenerator) {
+		this.$_uuidGenerator = uuidGenerator || uuid.create
+		this.$_treeId = this.$_uuidGenerator()
 
-		this.$_root = data ? new Node(data, this.$_guidGenerator(), this.$_treeId) : null
+		this.$_root = data ? new Node(data, this.$_uuidGenerator(), this.$_treeId) : null
 		data && this._parse(data, this.$_root)
 	}
 
@@ -23,7 +23,7 @@ export class Tree {
 	}
 
 	set root(data) {
-		this.$_root = new Node(data, this.$_guidGenerator(), this.$_treeId)
+		this.$_root = new Node(data, this.$_uuidGenerator(), this.$_treeId)
 	}
 
 	get treeId() {
@@ -107,7 +107,7 @@ export class Tree {
 	 */
 	_parse(data, parent) {
 		data.children && data.children.forEach(child => {
-			const childNode = parent.$add(new Node(child, this.$_guidGenerator(), this.$_treeId, parent))
+			const childNode = parent.add(new Node(child, this.$_uuidGenerator(), this.$_treeId, parent))
 			this._parse(child, childNode)
 		})
 	}
@@ -123,12 +123,12 @@ export class Tree {
 
 		if (addAllByOne) {
 			if (!isArray(data)) throw new Error('To add multiple items one at a "data" argument must be an array')
-			const children = data.map((nodeData) => new Node(nodeData, this.$_guidGenerator(), this.$_treeId, parent))
-			parent.$add(children);
+			const children = data.map((nodeData) => new Node(nodeData, this.$_uuidGenerator(), this.$_treeId, parent))
+			parent.add(children);
 			return children
 		} else {
-			const child = new Node(data, this.$_guidGenerator(), this.$_treeId, parent)
-			parent.$add(child);
+			const child = new Node(data, this.$_uuidGenerator(), this.$_treeId, parent)
+			parent.add(child);
 			return child
 		}
 	}
@@ -139,7 +139,7 @@ export class Tree {
 	 */
 	remove(nodeToRemove) {
 		if (nodeToRemove) {
-			nodeToRemove.$remove()
+			nodeToRemove.remove()
 		} else {
 			throw new Error('Parent does not exist.');
 		}

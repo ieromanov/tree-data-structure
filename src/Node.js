@@ -1,4 +1,4 @@
-import { isArray, isObject } from './helpers'
+import { isArray, isObject, UUID } from './helpers'
 
 /**
  * @constructor
@@ -16,12 +16,13 @@ export default class Node {
 		this.$_parent = parent || null
 		this.$_pathIds = parent ? [ ...parent.$_pathIds, parent.$_id ] : []
 		this.$_children = []
+		this.$_uuidGenerator = UUID.create
 
 		this.$initData(data)
 
-		this.$add = this.$add.bind(this)
-		this.$remove = this.$remove.bind(this)
-		this.$belongs = this.$belongs.bind(this)
+		this.add = this.add.bind(this)
+		this.remove = this.remove.bind(this)
+		this.belongs = this.belongs.bind(this)
 	}
 
 	get children () {
@@ -67,15 +68,27 @@ export default class Node {
 	}
 
 	// Добавляет элемент типа Node в дочерние элементы
-	$add(data) {
-		(isArray(data) && data[0] instanceof Node)
-			? this.$_children.push(...data)
-			: data instanceof Node && this.$_children.push(data)
-		
+	add(data) {
+		if (isArray(data)) {
+			if (data[0] instanceof Node) {
+				this.$_children.push(...data)
+			} else {
+				for(let i = 0, length = data.length; i < length; i++) {
+					this.$_children.push(new Node(data[i], this.$_uuidGenerator(), this.$_treeId, this))
+				}
+			}
+		} else {
+			this.$_children.push(
+				data instanceof Node
+					? data
+					: new Node(data, this.$_uuidGenerator(), this.$_treeId, this)
+			)
+		}
+
 		return data
 	}
 	// Удаляет сам себя из родительского массива
-	$remove() {
+	remove() {
 		if (this.$_parent) {
 			this.$_parent.$_children = this.$_parent.$_children.filter(node => node.$_id !== this.$_id)
 		} else {
@@ -84,7 +97,7 @@ export default class Node {
 	}
 
 	// Является ли переданный узел дочерним данному узлу
-	$belongs(node) {
+	belongs(node) {
 		return node instanceof Node && this.$_children.some(child => child.$_id === node.$_id)
 	}
 }
