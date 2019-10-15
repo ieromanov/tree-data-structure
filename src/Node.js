@@ -50,8 +50,9 @@ export default class Node {
 
 	set parent(parent) {
 		if (!(parent instanceof Node)) throw new Error('Parent must be only Node')
-		if (!~parent.indexOf(this)) throw new Error('This parent does not have child nodes such as this', this)
 		this.$_parent = parent
+		parent.add(this)
+		this.$_parentIds = [ ...parent.$_pathIds, parent.$_id ]
 	}
 
 	// Если в data пришел объект, переписать его свойства в this
