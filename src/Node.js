@@ -1,4 +1,4 @@
-import { isArray, isObject, UUID } from './helpers'
+import { isArray, isObject, uuid } from './helpers'
 
 /**
  * @constructor
@@ -16,7 +16,7 @@ export default class Node {
 		this.$_parent = parent || null
 		this.$_pathIds = parent ? [ ...parent.$_pathIds, parent.$_id ] : []
 		this.$_children = []
-		this.$_uuidGenerator = UUID.create
+		this.$_uuidGenerator = uuid.create
 
 		this.$initData(data)
 

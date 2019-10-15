@@ -1,19 +1,17 @@
-import { UUID } from '../src/helpers'
+import { uuid as uuidCreator } from '../src/helpers'
 
-test('should created UUID class', () => {
-	const uuid = new UUID()
-	expect(uuid).toBeInstanceOf(UUID)
-})
+// test('should created UUID class', () => {
+// 	expect(uuidCreator).toBeInstanceOf(UUID)
+// })
 
 test('should create uuid', () => {
-	const uuid = new UUID().create()
+	const uuid = uuidCreator.create()
 	expect(typeof uuid).toBe('string')
 	expect(uuid.length).toEqual(36)
 })
 
 test('should check uuid on unique', () => {
-	const uuidCreator = new UUID()
 	expect(uuidCreator.exist(1)).toBeFalsy()
-	expect(uuidCreator.uuids.length).toEqual(1)
+	expect(uuidCreator.uuids.includes(1)).toBeTruthy()
 	expect(uuidCreator.exist(1)).toBeTruthy()
 })

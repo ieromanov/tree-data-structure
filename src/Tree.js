@@ -1,8 +1,6 @@
-import { isArray, isObject, UUID } from './helpers'
+import { isArray, isObject, uuid } from './helpers'
 import Node from './Node'
 import Queue from './Queue'
-
-const uuid = new UUID()
 
 /**
  * @constructor

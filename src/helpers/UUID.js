@@ -1,4 +1,4 @@
-export class UUID {
+class UUID {
 	constructor() {
 		this.uuids = []
 
@@ -33,3 +33,6 @@ export class UUID {
 		})
 	}
 }
+
+
+export const uuid = new UUID()
