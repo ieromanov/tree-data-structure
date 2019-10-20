@@ -11,6 +11,7 @@ export class Tree {
 	constructor(data, uuidGenerator) {
 		this.$_uuidGenerator = uuidGenerator || uuid.create
 		this.$_treeId = this.$_uuidGenerator()
+		this.$_cache = {}
 
 		this.$_root = data ? new Node(data, this.$_uuidGenerator(), this.$_treeId) : null
 		data && this._parse(data, this.$_root)
@@ -171,10 +172,14 @@ export class Tree {
 	 * @param { boolean } onlyFirst 
 	 */
 	searchNodeByData(data, key, isDeepSearch = true, onlyFirst = false) {
+		if (this.$_cache[data] && onlyFirst) {
+			return this.$_cache[data]
+		}
 		let searchedNode = []
 		const next = node => {
 			if (node[key] === data) {
 				searchedNode.push(node)
+				this.$_cache[data] = node
 				return !onlyFirst
 			}
 			return true
