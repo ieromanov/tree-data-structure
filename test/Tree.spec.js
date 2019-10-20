@@ -107,3 +107,23 @@ test('should the node belongs to the tree', () => {
 	const [ node ] = tree.searchNodeByData('child2', 'name')
 	expect(tree.belongs(node)).toBeTruthy()
 })
+
+test('should caching search data', () => {
+	const tree = new Tree({
+		name: 'root',
+		children: [
+			{
+				name: 'child',
+				children: ['data']
+			},
+			{
+				name: 'child2',
+				key: 224411
+			}
+		]
+	})
+
+	const [ node ] = tree.searchNodeByData('child2', 'name')
+	expect(tree.$_cache['child2']).toEqual(node)
+})
+
