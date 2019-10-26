@@ -1,4 +1,4 @@
-import { isArray, isObject, uuid } from './helpers'
+import { isArray, isObject, isFunction, uuid } from './helpers'
 
 /**
  * @constructor
@@ -41,7 +41,7 @@ export default class Node {
 	get toObject() {
 		let obj = {}
 		for (let property in this) {
-			if (!property.includes('$')) {
+			if (!property.includes('$') && !isFunction(this[property])) {
 				obj[property] = this[property]
 			}
 		}

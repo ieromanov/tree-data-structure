@@ -107,3 +107,18 @@ test('should setter parent add link on parent Node', () => {
 	expect(parent.belongs(node)).toBeTruthy()
 	expect(node.$_parentIds[node.$_parentIds.length - 1]).toEqual(parent.$_id)
 })
+
+test('should setter parent throw error if parent not instance of Node', () => {
+	const node = new Node('root', 100)
+	const parent = {}
+	
+	expect(() => {
+		node.parent = parent
+	}).toThrow('Parent must be only Node')
+})
+
+test('should toObject getter return Object data', () => {
+	const node = new Node({ id: 123, name: 'root', someProp: 12 }, 1)
+
+	expect(node.toObject).toEqual({ id: 123, name: 'root', someProp: 12 })
+})
