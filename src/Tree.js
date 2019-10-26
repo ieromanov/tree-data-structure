@@ -161,7 +161,7 @@ export class Tree {
 			}
 		};
 
-		return search(key, this.$_root)
+		return search(key, this.root)
 	}
 
 	/**
@@ -184,7 +184,7 @@ export class Tree {
 			}
 			return true
 		}
-		this._applyToNode(isDeepSearch ? 'df' : 'bf', next, this.$_root)
+		this._applyToNode(isDeepSearch ? 'df' : 'bf', next, this.root)
 		return searchedNode
 	}
 
