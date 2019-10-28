@@ -84,7 +84,7 @@ test('should search node(s) by data', () => {
 		]
 	})
 
-	const [ node, node2 ] = tree.searchNodeByData('child2', 'name')
+	const [ node, node2 ] = tree.search('child2', 'name')
 	expect(node.key).toEqual(1933)
 	expect(node2.key).toEqual(224411)
 })
@@ -104,7 +104,7 @@ test('should the node belongs to the tree', () => {
 		]
 	})
 
-	const [ node ] = tree.searchNodeByData('child2', 'name')
+	const [ node ] = tree.search('child2', 'name')
 	expect(tree.belongs(node)).toBeTruthy()
 })
 
@@ -123,7 +123,29 @@ test('should caching search data', () => {
 		]
 	})
 
-	const [ node ] = tree.searchNodeByData('child2', 'name')
+	const [ node ] = tree.search('child2', 'name')
 	expect(tree.$_cache['child2']).toEqual(node)
 })
 
+test('should search by default "id" property', () => {
+	const tree = new Tree({
+		name: 'root',
+		children: [
+			{
+				id: 224411,
+				name: 'child111',
+				children: ['data']
+			},
+			{
+				id: 224422,
+				name: 'child222',
+				key: 224411
+			}
+		]
+	})
+
+	const [ node ] = tree.search(224422)
+	expect(node.name).toEqual('child222')
+	const [ node2 ] = tree.search(224411)
+	expect(node2.name).toEqual('child111')
+})

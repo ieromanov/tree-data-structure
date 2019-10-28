@@ -171,7 +171,7 @@ export class Tree {
 	 * @param { boolean } isDeepSearch 
 	 * @param { boolean } onlyFirst 
 	 */
-	searchNodeByData(data, key, isDeepSearch = true, onlyFirst = false) {
+	search(data, key = 'id', isDeepSearch = true, onlyFirst = false) {
 		if (this.$_cache[data] && onlyFirst) {
 			return this.$_cache[data]
 		}
