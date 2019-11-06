@@ -1,4 +1,4 @@
-import { isArray, isObject, uuid } from './helpers'
+import { isArray, isObject, isNumber, isString, uuid } from './helpers'
 import Node from './Node'
 import Queue from './Queue'
 
@@ -172,6 +172,9 @@ export class Tree {
 	 * @param { boolean } onlyFirst 
 	 */
 	search(data, key = 'id', isDeepSearch = true, onlyFirst = false) {
+		if (!isNumber(data) && !isString(data)) {
+			throw new Error('search only by data with type string or number')
+		}
 		if (this.$_cache[data] && onlyFirst) {
 			return this.$_cache[data]
 		}
