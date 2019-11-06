@@ -149,3 +149,28 @@ test('should search by default "id" property', () => {
 	const [ node2 ] = tree.search(224411)
 	expect(node2.name).toEqual('child111')
 })
+
+test('should throw error if search data not having a type string or number', () => {
+	const tree = new Tree({
+		name: 'root',
+		children: [
+			{
+				id: 224411,
+				name: 'child111',
+				children: ['data']
+			},
+			{
+				id: 224422,
+				name: 'child222',
+				key: 224411
+			}
+		]
+	})
+	expect(() => {
+		tree.search([])
+	}).toThrow()
+
+	expect(() => {
+		tree.search({})
+	}).toThrow()
+})
