@@ -124,7 +124,7 @@ test('should caching search data', () => {
 	})
 
 	const [ node ] = tree.search('child2', 'name')
-	expect(tree.$_cache['child2']).toEqual(node)
+	expect(tree.$_cache.values().next().value).toEqual(node)
 })
 
 test('should search by default "id" property', () => {

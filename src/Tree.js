@@ -1,4 +1,11 @@
-import { isArray, isObject, isNumber, isString, uuid } from './helpers'
+import {
+	isArray,
+	isObject,
+	isNumber,
+	isString,
+	uuid,
+	generateKey
+} from './helpers'
 import Node from './Node'
 import Queue from './Queue'
 
@@ -11,7 +18,7 @@ export class Tree {
 	constructor(data, uuidGenerator) {
 		this.$_uuidGenerator = uuidGenerator || uuid.create
 		this.$_treeId = this.$_uuidGenerator()
-		this.$_cache = {}
+		this.$_cache = new Map()
 
 		this.$_root = data ? new Node(data, this.$_uuidGenerator(), this.$_treeId) : null
 		data && this._parse(data, this.$_root)
@@ -175,14 +182,15 @@ export class Tree {
 		if (!isNumber(data) && !isString(data)) {
 			throw new Error('search only by data with type string or number')
 		}
-		if (this.$_cache[data] && onlyFirst) {
-			return this.$_cache[data]
+		const keyForCache = generateKey(data, key)
+		if (this.$_cache.has(keyForCache) && onlyFirst) {
+			return this.$_cache.get(keyForCache)
 		}
 		let searchedNode = []
 		const next = node => {
 			if (node[key] === data) {
 				searchedNode.push(node)
-				this.$_cache[data] = node
+				this.$_cache.set(keyForCache, node)
 				return !onlyFirst
 			}
 			return true
