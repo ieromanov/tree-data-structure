@@ -1,0 +1,1 @@
+export const generateKey = (data, key) => data.toString() + ':' + typeof data + ':' + key
