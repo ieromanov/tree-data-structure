@@ -129,7 +129,7 @@ tree.remove(node)
 ```js
 tree.search(data, key, isDeepSearch, onlyFirst)
 ```
-`data` - data to find
-`key` - property key that stores the data to be searched. `id` by default
-`isDeepSearch` - use [deep search](https://en.wikipedia.org/wiki/Depth-first_search), if `true`, or [breadth search](https://en.wikipedia.org/wiki/Breadth-first_search) algorithm. `true` by default
-`onlyFirst` - search only first match
+⋅⋅⋅`data` - data to find
+⋅⋅⋅`key` - property key that stores the data to be searched. `id` by default
+⋅⋅⋅`isDeepSearch` - use [deep search](https://en.wikipedia.org/wiki/Depth-first_search), if `true`, or [breadth search](https://en.wikipedia.org/wiki/Breadth-first_search) algorithm. `true` by default
+⋅⋅⋅`onlyFirst` - search only first match
