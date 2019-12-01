@@ -2,7 +2,13 @@
 
 javascript library for build tree data structure
 
-## API
+## Install
+
+```bash
+npm i tree-data-structure
+```
+
+## Import
 
 Browser
 
@@ -19,6 +25,8 @@ const Tree =  require('tree-data-structure').default;
 
 const tree = new Tree('root')
 ```
+
+## API
 
 ### tree.add() - add item in tree
 
