@@ -4,3 +4,5 @@
 /src/
 /test/
 build.js
+babel.config.js
+README.md
