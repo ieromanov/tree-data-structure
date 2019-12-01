@@ -1,6 +1,6 @@
-# TREE
+# TREE DATA STRUCTURE
 
-javascript library for build tree structure
+javascript library for build tree data structure
 
 ## Development
 
