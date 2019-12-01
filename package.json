@@ -2,7 +2,7 @@
 	"name": "tree-data-structure",
 	"version": "0.0.1",
 	"description": "build tree data structure for javascript",
-	"main": "/src/index.js",
+	"main": "index.js",
 	"scripts": {
 		"build": "node build.js",
 		"dev": "webpack-dev-server --inline --progress --config config/dev.config.js",
@@ -16,7 +16,8 @@
 	"license": "ISC",
 	"keywords": [
 		"tree",
-		"data-structure"
+		"data-structure",
+		"node"
 	],
 	"bugs": {
 		"url": "https://github.com/ieromanov/tree/issues"

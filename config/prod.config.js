@@ -10,7 +10,8 @@ module.exports = webpackMerge(commonConfig, {
 		path: path.resolve(__dirname, '../dist'),
 		filename: 'tds.js',
 		library: 'tree-data-structure',
-		libraryTarget: 'umd'
+		libraryTarget: 'umd',
+		globalObject: 'this'
 	},
 	optimization: {
 		minimize: true,
