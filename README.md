@@ -92,7 +92,7 @@ import Tree from "tree-data-structure";
 
 const tree = new Tree('root')
 
-tree.add({ one: 1, two: 2, three: 3 }, tree.root, true)
+tree.add({ one: 1, two: 2, three: 3 }, tree.root)
 
 /*
  output tree root node
@@ -118,7 +118,7 @@ import Tree from "tree-data-structure";
 
 const tree = new Tree('root')
 
-const node = tree.add({ one: 1, two: 2, three: 3 }, tree.root, true)
+const node = tree.add({ one: 1, two: 2, three: 3 }, tree.root)
 
 tree.remove(node)
 
