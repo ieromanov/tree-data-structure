@@ -30,6 +30,10 @@ const tree = new Tree('root')
 
 ### tree.add() - add item in tree
 
+```js
+tree.add(data, parent, addAllByOne)
+```
+
 Argument | Type | Description | Required | Default
 -------- | ---- | ----------- | -------- | -------
 data | any | Data that the tree node will store | `true` | -
@@ -143,10 +147,10 @@ tree.remove(node)
 ```js
 tree.search(data, key, isDeepSearch, onlyFirst)
 ```
-1. `data` - data to find
 
-2. `key` - property key that stores the data to be searched. `id` by default
-
-3. `isDeepSearch` - use [deep search](https://en.wikipedia.org/wiki/Depth-first_search), if `true`, or [breadth search](https://en.wikipedia.org/wiki/Breadth-first_search) algorithm. `true` by default
-
-4. `onlyFirst` - search only first match
+Argument | Type | Description | Required | Default
+-------- | ---- | ----------- | -------- | -------
+data | any | Data to be found | `true` | -
+key | String | Property key that stores the data to be searched | `false` | id
+isDeepSearch | Boolean | use [deep search](https://en.wikipedia.org/wiki/Depth-first_search), if `true`, or [breadth search](https://en.wikipedia.org/wiki/Breadth-first_search) algorithm | `false` | `true`
+onlyFirst | Boolean | search only first match | `false` | `false`
