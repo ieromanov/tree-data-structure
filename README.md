@@ -28,7 +28,7 @@ const tree = new Tree('root')
 
 ## API
 
-### tree.add() - add item in tree
+### `tree.add()` - add item in tree
 
 ```js
 tree.add(data, parent, addAllByOne)
@@ -121,7 +121,7 @@ tree.add({ one: 1, two: 2, three: 3 }, tree.root)
 */
 ```
 
-### tree.remove() - remove item from tree
+### `tree.remove()` - remove item from tree
 
 ```js
 import Tree from "tree-data-structure";
@@ -142,7 +142,7 @@ tree.remove(node)
 */
 ```
 
-### tree.search() - search in tree
+### `tree.search()` - search in tree
 
 ```js
 tree.search(data, key, isDeepSearch, onlyFirst)
