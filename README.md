@@ -30,6 +30,12 @@ const tree = new Tree('root')
 
 ### tree.add() - add item in tree
 
+Argument | Type | Description | Required | Default
+-------- | ---- | ----------- | -------- | -------
+data | any | Data that the tree node will store | `true` | -
+parent | Node | Parent node that will store the new node | `true` | -
+addAllByOne | Boolean | If the `array` is passed and it is `true`, all items of the array are added as separate nodes | `false` | `false`
+
 The first argument is the data that the tree node will store
 The second argument is the parent node that will store the new node
 
