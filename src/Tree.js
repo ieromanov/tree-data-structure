@@ -1,3 +1,5 @@
+import Map from 'core-js-pure/stable/map';
+
 import {
 	isArray,
 	isObject,
@@ -145,9 +147,10 @@ export class Tree {
 	 */
 	remove(nodeToRemove) {
 		if (nodeToRemove) {
-			nodeToRemove.remove()
+			const parent = this.search(nodeToRemove.$_parentId, '$_id', true, true)
+			parent[0].remove(nodeToRemove)
 		} else {
-			throw new Error('Parent does not exist.');
+			throw new Error('first argument required');
 		}
 	}
 	

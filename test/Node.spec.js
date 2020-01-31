@@ -42,14 +42,15 @@ test('should add Array Nodes to Node children', () => {
 	expect(parent.children[1]).toEqual(secondChild)
 })
 
-test('should remove Node into parent Node', () => {
+test('should throw Error if not pass Node to remove', () => {
 	const parent = new Node('root', 100)
 
 	parent.add('children number one')
 	expect(parent.children.length).toEqual(1)
 
-	parent.children[0].remove()
-	expect(parent.children.length).toEqual(0)
+	expect(() => {
+		parent.children[0].remove()
+	}).toThrow()
 })
 
 test('should throw Error if remove node without parent node', () => {
@@ -102,7 +103,7 @@ test('should setter parent add link on parent Node', () => {
 	const parent = new Node('root', 100)
 	node.parent = parent
 
-	expect(node.$_parent).toEqual(parent)
+	expect(node.$_parentId).toEqual(parent.$_id)
 	expect(parent.children.length).toEqual(1)
 	expect(parent.belongs(node)).toBeTruthy()
 	expect(node.$_parentIds[node.$_parentIds.length - 1]).toEqual(parent.$_id)
