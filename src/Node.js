@@ -13,7 +13,7 @@ export default class Node {
 		if (parent && !(parent instanceof Node)) throw new Error('Parent arg not instance of \'Node\'')
 		this.$_id = id
 		this.$_treeId = treeId
-		this.$_parent = parent || null
+		this.$_parentId =  parent ? parent.$_id : null
 		this.$_pathIds = parent ? [ ...parent.$_pathIds, parent.$_id ] : []
 		this.$_children = []
 		this.$_uuidGenerator = uuid.create
@@ -32,7 +32,7 @@ export default class Node {
 		return (this.$_children && isArray(this.$_children) && this.$_children.length > 0)
 	}
 	get isRoot() {
-		return this.$_parent === null
+		return this.$_parentId === null
 	}
 	get level() { // На каком уровне вложенности находится узел
 		return this.$_pathIds.length + 1
@@ -50,7 +50,7 @@ export default class Node {
 
 	set parent(parent) {
 		if (!(parent instanceof Node)) throw new Error('Parent must be only Node')
-		this.$_parent = parent
+		this.$_parentId = parent.$_id
 		parent.add(this)
 		this.$_parentIds = [ ...parent.$_pathIds, parent.$_id ]
 	}
@@ -88,13 +88,12 @@ export default class Node {
 
 		return data
 	}
-	// Удаляет сам себя из родительского массива
-	remove() {
-		if (this.$_parent) {
-			this.$_parent.$_children = this.$_parent.$_children.filter(node => node.$_id !== this.$_id)
-		} else {
-			throw new Error('Node not has parent node')
-		}
+	// Удаляет дочерний элемент
+	remove(nodeToRemove) {
+		if (nodeToRemove === undefined) {
+			throw new Error('First argument required. You should pass Node which you want to delete')
+		} 
+		this.$_children = this.$_children.filter(child => child.$_id !== nodeToRemove.$_id)
 	}
 
 	// Является ли переданный узел дочерним данному узлу
