@@ -1,3 +1,5 @@
+import Map from 'core-js-pure/stable/map';
+
 import {
 	isArray,
 	isObject,
