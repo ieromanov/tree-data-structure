@@ -1,5 +1,3 @@
-import Map from 'core-js-pure/stable/map';
-
 import {
 	isArray,
 	isObject,
@@ -153,26 +151,6 @@ export class Tree {
 			throw new Error('first argument required');
 		}
 	}
-	
-	getAllDataByKey(key) {
-		const search = (key, data, result = []) => {
-			try {
-				Object.keys(data).forEach(prop => {
-					if(prop === key){
-						result.push(data[prop])
-					}
-					data[prop] && data[prop].children.forEach(obj => {
-						search(key, obj, result)
-					})
-				});
-				return result
-			} catch(error) {
-				console.error(error)
-			}
-		};
-
-		return search(key, this.root)
-	}
 
 	/**
 	 * 
@@ -182,8 +160,9 @@ export class Tree {
 	 * @param { boolean } onlyFirst 
 	 */
 	search(data, key = 'id', isDeepSearch = true, onlyFirst = false) {
-		if (!isNumber(data) && !isString(data)) {
-			throw new Error('search only by data with type string or number')
+		const searchArrayData = isArray(data)
+		if (!isNumber(data) && !isString(data) && !searchArrayData) {
+			throw new Error('search only by data with type string, number or Array<number>, Array<string>')
 		}
 		const keyForCache = generateKey(data, key)
 		if (this.$_cache.has(keyForCache) && onlyFirst) {
@@ -191,7 +170,11 @@ export class Tree {
 		}
 		let searchedNode = []
 		const next = node => {
-			if (node[key] === data) {
+			const isCurrentData = searchArrayData
+				? data.includes(node[key])
+				: node[key] === data
+
+			if (isCurrentData) {
 				searchedNode.push(node)
 				this.$_cache.set(keyForCache, node)
 				return !onlyFirst
