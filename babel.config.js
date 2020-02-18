@@ -3,7 +3,10 @@ module.exports = {
 		[
 			'@babel/preset-env',
 			{
-				useBuiltIns: 'entry',
+				targets: {
+					browsers: ['last 4 versions', 'IE 10']
+				},
+				useBuiltIns: 'usage',
 				corejs: 3
 			}
 		]
