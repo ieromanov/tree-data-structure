@@ -193,7 +193,7 @@ export class Tree {
 	 * @param { boolean } isDeepSearch 
 	 * @param { boolean } onlyFirst 
 	 */
-	search(data, key = 'id', isDeepSearch = true, onlyFirst = false) {
+	search(data, { key = 'id', isDeepSearch = true, onlyFirst = false }) {
 		const searchArrayData = isArray(data)
 		if (!isNumber(data) && !isString(data) && !searchArrayData) {
 			throw new Error('search only by data with type string, number or Array<number>, Array<string>')
