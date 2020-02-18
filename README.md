@@ -137,12 +137,18 @@ tree.remove(node)
 ### `tree.search()` - search in tree
 
 ```js
-tree.search(data, key, isDeepSearch, onlyFirst)
+tree.search(data, options)
 ```
 
 Argument | Type | Description | Required | Default
 -------- | ---- | ----------- | -------- | -------
 data | any | Data to be found | `true` | -
+options | Object | Options for search | `false` | -
+
+###### Options
+
+Argument | Type | Description | Required | Default
+-------- | ---- | ----------- | -------- | -------
 key | String | Property key that stores the data to be searched | `false` | id
 isDeepSearch | Boolean | use [deep search](https://en.wikipedia.org/wiki/Depth-first_search), if `true`, or [breadth search](https://en.wikipedia.org/wiki/Breadth-first_search) algorithm | `false` | `true`
 onlyFirst | Boolean | search only first match | `false` | `false`

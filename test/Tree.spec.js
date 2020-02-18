@@ -59,7 +59,9 @@ describe('Tree', () => {
 		})
 		
 		test('should search node(s) by data', () => {	
-			const [node, node2] = tree.search('child111', 'name')
+			const [node, node2] = tree.search('child111', {
+				key: 'name'
+			})
 			expect(node.id).toEqual(224400)
 			expect(node2.id).toEqual(224411)
 		})
@@ -70,7 +72,9 @@ describe('Tree', () => {
 		})
 		
 		test('should caching search data', () => {	
-			const [node] = tree.search('child222', 'name')
+			const [node] = tree.search('child222', {
+				key: 'name'
+			})
 			expect(tree.$_cache.values().next().value).toEqual(node)
 		})
 		

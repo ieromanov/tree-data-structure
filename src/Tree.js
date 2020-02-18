@@ -172,12 +172,11 @@ export class Tree {
 	 */
 	remove(nodeToRemove) {
 		if (nodeToRemove) {
-			const parent = this.search(
-				nodeToRemove.$_parentId,
-				this.$_options.trackFieldName,
-				true,
-				true
-			)
+			const parent = this.search(nodeToRemove.$_parentId, {
+				key: this.$_options.trackFieldName,
+				isDeepSearch: true,
+				onlyFirst: true
+			})
 			if (parent[0] !== undefined) {
 				parent[0].remove(nodeToRemove)
 			}
@@ -193,7 +192,7 @@ export class Tree {
 	 * @param { boolean } isDeepSearch 
 	 * @param { boolean } onlyFirst 
 	 */
-	search(data, key = 'id', isDeepSearch = true, onlyFirst = false) {
+	search(data, { key = 'id', isDeepSearch = true, onlyFirst = false } = {}) {
 		const searchArrayData = isArray(data)
 		if (!isNumber(data) && !isString(data) && !searchArrayData) {
 			throw new Error('search only by data with type string, number or Array<number>, Array<string>')
