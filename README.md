@@ -18,14 +18,6 @@ import Tree from "tree-data-structure";
 const tree = new Tree('root')
 ```
 
-Node.js
-
-```js
-const Tree =  require('tree-data-structure').default;
-
-const tree = new Tree('root')
-```
-
 ## API
 
 ### `tree.add()` - add item in tree

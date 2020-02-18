@@ -1,176 +1,104 @@
 import Tree from '../src'
 import Node from '../src/Node'
 
-test('create Tree', () => {
-	const tree = new Tree()
-	expect(tree).toBeInstanceOf(Tree)
-})
+describe('Tree', () => {
+	let tree;
 
-test('should add node to root', () => {
-	const tree = new Tree('root')
-	tree.add('first', tree.root)
-	expect(tree.root.children[0].data).toBe('first')
-})
-
-test('should return new Node after add to tree', () => {
-	const tree = new Tree('root')
-	const node = tree.add('first', tree.root)
-	expect(node).toBeInstanceOf(Node)
-})
-
-test('should parse tree', () => {
-	const tree = new Tree({
-		name: 'root',
-		children: [
-			{
-				name: 'child',
-				children: ['data']
-			},
-			{
-				name: 'child2'
-			}
-		]
-	})
-	expect(tree.root.children[0].name).toBe('child')
-	expect(tree.root.children[1].name).toBe('child2')
-	expect(tree.root.children[0].children[0].data).toBe('data')
-})
-
-test('should set data to root node in tree', () => {
-	const tree = new Tree()
-	tree.root = 'root'
-
-	expect(tree.root).toBeInstanceOf(Node)
-	expect(tree.root.data).toBe('root')
-})
-
-test('should remove node into tree', () => {
-	const tree = new Tree({
-		name: 'root',
-		children: [
-			{
-				name: 'child',
-				children: ['data']
-			},
-			{
-				name: 'child2'
-			}
-		]
+	beforeEach(() => {
+		tree = new Tree({
+			name: 'root',
+			children: [
+				{
+					id: 224400,
+					name: 'child111',
+					children: ['data']
+				},
+				{
+					id: 224411,
+					name: 'child111',
+					children: ['data']
+				},
+				{
+					id: 224422,
+					name: 'child112',
+					children: ['data']
+				},
+				{
+					id: 224433,
+					name: 'child222',
+					key: 224411
+				}
+			]
+		})
 	})
 
-	expect(tree.root.children[0].children.length).toBe(1)
-	tree.remove(tree.root.children[0].children[0])
-	expect(tree.root.children[0].children.length).toBe(0)
-})
+	describe('MAIN', () => {
+		test('create Tree', () => {
+			expect(tree).toBeInstanceOf(Tree)
+		})
+		
+		test('should add node to root', () => {
+			tree.add('first', tree.root)
+			expect(tree.root.children[0].id).toBe(224400)
+		})
+		
+		test('should return new Node after add to tree', () => {
+			const node = tree.add('first', tree.root)
+			expect(node).toBeInstanceOf(Node)
+		})
+		
+		test('should parse tree', () => {
+			expect(tree.root.children[0].name).toBe('child111')
+			expect(tree.root.children[2].name).toBe('child112')
+		})
 
-test('should search node(s) by data', () => {
-	const tree = new Tree({
-		name: 'root',
-		children: [
-			{
-				name: 'child',
-				children: ['data']
-			},
-			{
-				name: 'child2',
-				key: 224411,
-				children: [
-					{
-						name: 'child2',
-						key: 1933
-					}
-				]
-			}
-		]
+		test('should remove node into tree', () => {	
+			expect(tree.root.children[0].children.length).toBe(1)
+			tree.remove(tree.root.children[0].children[0])
+			expect(tree.root.children[0].children.length).toBe(0)
+		})
+		
+		test('should search node(s) by data', () => {	
+			const [node, node2] = tree.search('child111', 'name')
+			expect(node.id).toEqual(224400)
+			expect(node2.id).toEqual(224411)
+		})
+		
+		test('should the node belongs to the tree', () => {
+			const node = tree.root.children[0]
+			expect(tree.belongs(node)).toBeTruthy()
+		})
+		
+		test('should caching search data', () => {	
+			const [node] = tree.search('child222', 'name')
+			expect(tree.$_cache.values().next().value).toEqual(node)
+		})
+		
+		test('should search by default "id" property', () => {	
+			const [node] = tree.search(224422)
+			expect(node.name).toEqual('child112')
+			const [node2] = tree.search(224411)
+			expect(node2.name).toEqual('child111')
+		})
+		
+		test('should search some node by default "id" property', () => {	
+			const [node, node2, node3] = tree.search([224411, 224422, 224433])
+			expect(node.name).toEqual('child111')
+			expect(node2.name).toEqual('child112')
+			expect(node3.name).toEqual('child222')
+		})
+		
+		test('should throw error if search data not having a type string, number or array', () => {
+			expect(() => { tree.search({}) }).toThrow()
+		})
 	})
 
-	const [ node, node2 ] = tree.search('child2', 'name')
-	expect(node.key).toEqual(1933)
-	expect(node2.key).toEqual(224411)
-})
-
-test('should the node belongs to the tree', () => {
-	const tree = new Tree({
-		name: 'root',
-		children: [
-			{
-				name: 'child',
-				children: ['data']
-			},
-			{
-				name: 'child2',
-				key: 224411
-			}
-		]
+	describe('GETTERS & SETTERS', () => {
+		test('should set data to root node in tree', () => {
+			tree.root = 'root'
+			expect(tree.root).toBeInstanceOf(Node)
+			expect(tree.root.data).toBe('root')
+		})
 	})
-
-	const [ node ] = tree.search('child2', 'name')
-	expect(tree.belongs(node)).toBeTruthy()
 })
 
-test('should caching search data', () => {
-	const tree = new Tree({
-		name: 'root',
-		children: [
-			{
-				name: 'child',
-				children: ['data']
-			},
-			{
-				name: 'child2',
-				key: 224411
-			}
-		]
-	})
-
-	const [ node ] = tree.search('child2', 'name')
-	expect(tree.$_cache.values().next().value).toEqual(node)
-})
-
-test('should search by default "id" property', () => {
-	const tree = new Tree({
-		name: 'root',
-		children: [
-			{
-				id: 224411,
-				name: 'child111',
-				children: ['data']
-			},
-			{
-				id: 224422,
-				name: 'child222',
-				key: 224411
-			}
-		]
-	})
-
-	const [ node ] = tree.search(224422)
-	expect(node.name).toEqual('child222')
-	const [ node2 ] = tree.search(224411)
-	expect(node2.name).toEqual('child111')
-})
-
-test('should throw error if search data not having a type string or number', () => {
-	const tree = new Tree({
-		name: 'root',
-		children: [
-			{
-				id: 224411,
-				name: 'child111',
-				children: ['data']
-			},
-			{
-				id: 224422,
-				name: 'child222',
-				key: 224411
-			}
-		]
-	})
-	expect(() => {
-		tree.search([])
-	}).toThrow()
-
-	expect(() => {
-		tree.search({})
-	}).toThrow()
-})

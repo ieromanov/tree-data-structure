@@ -1,0 +1,1 @@
+export const DEFAULT_TRACK_KEY = '$_id'
