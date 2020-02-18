@@ -1,4 +1,5 @@
 import { isArray, isObject, isFunction, uuid } from './helpers'
+import { DEFAULT_TRACK_KEY } from './constants'
 
 /**
  * @constructor
@@ -9,12 +10,32 @@ import { isArray, isObject, isFunction, uuid } from './helpers'
  * @param { string | number } parent - ссылка на родительский узел
  */
 export default class Node {
-	constructor(data, id, treeId, parent) {
-		if (parent && !(parent instanceof Node)) throw new Error('Parent arg not instance of \'Node\'')
-		this.$_id = id
+	constructor(data, options = {}) {
+		if (options.parent !== undefined && !(options.parent instanceof Node)) {
+			throw new Error('Parent arg not instance of \'Node\'')
+		}
+
+		const { treeId, parent, trackFieldName } = options
+
+		const trackKey = trackFieldName !== undefined
+			? trackFieldName
+			: DEFAULT_TRACK_KEY
+		const trackValue = isObject(data) && data[trackFieldName] !== undefined
+			? data[trackFieldName]
+			: uuid.create()
+
+		this.$_options = {
+			trackFieldName: trackKey
+		}
+
+		this[trackKey] = trackValue
 		this.$_treeId = treeId
-		this.$_parentId =  parent ? parent.$_id : null
-		this.$_pathIds = parent ? [ ...parent.$_pathIds, parent.$_id ] : []
+		this.$_parentId =  parent
+			? parent[trackKey]
+			: null
+		this.$_path = parent
+			? [...parent.$_path, parent[trackKey]]
+			: []
 		this.$_children = []
 		this.$_uuidGenerator = uuid.create
 
@@ -35,7 +56,7 @@ export default class Node {
 		return this.$_parentId === null
 	}
 	get level() { // На каком уровне вложенности находится узел
-		return this.$_pathIds.length + 1
+		return this.$_path.length + 1
 	}
 
 	get toObject() {
@@ -49,10 +70,12 @@ export default class Node {
 	}
 
 	set parent(parent) {
-		if (!(parent instanceof Node)) throw new Error('Parent must be only Node')
-		this.$_parentId = parent.$_id
+		if (!(parent instanceof Node)) {
+			throw new Error('Parent must be only Node')
+		}
+		this.$_parentId = parent[this.$_options.trackFieldName]
 		parent.add(this)
-		this.$_parentIds = [ ...parent.$_pathIds, parent.$_id ]
+		this.$_path = [ ...parent.$_path, parent[this.$_options.trackFieldName] ]
 	}
 
 	// Если в data пришел объект, переписать его свойства в this
@@ -75,14 +98,20 @@ export default class Node {
 				this.$_children.push(...data)
 			} else {
 				for(let i = 0, length = data.length; i < length; i++) {
-					this.$_children.push(new Node(data[i], this.$_uuidGenerator(), this.$_treeId, this))
+					this.$_children.push(new Node(data[i], {
+						treeId: this.$_treeId,
+						parent: this
+					}))
 				}
 			}
 		} else {
 			this.$_children.push(
 				data instanceof Node
 					? data
-					: new Node(data, this.$_uuidGenerator(), this.$_treeId, this)
+					: new Node(data, {
+						treeId: this.$_treeId,
+						parent: this
+					})
 			)
 		}
 
@@ -93,11 +122,11 @@ export default class Node {
 		if (nodeToRemove === undefined) {
 			throw new Error('First argument required. You should pass Node which you want to delete')
 		} 
-		this.$_children = this.$_children.filter(child => child.$_id !== nodeToRemove.$_id)
+		this.$_children = this.$_children.filter(child => child[this.$_options.trackFieldName] !== nodeToRemove[this.$_options.trackFieldName])
 	}
 
 	// Является ли переданный узел дочерним данному узлу
 	belongs(node) {
-		return node instanceof Node && this.$_children.some(child => child.$_id === node.$_id)
+		return node instanceof Node && this.$_children.some(child => child[this.$_options.trackFieldName] === node[this.$_options.trackFieldName])
 	}
 }

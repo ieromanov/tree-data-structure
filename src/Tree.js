@@ -9,19 +9,27 @@ import {
 import Node from './Node'
 import Queue from './Queue'
 
+import { DEFAULT_TRACK_KEY } from './constants'
+
 /**
  * @constructor
  * @param { object } data - Данные
  * @param { function } guidGenerator - Функция которая возвращает guid
  */
 export class Tree {
-	constructor(data, uuidGenerator) {
-		this.$_uuidGenerator = uuidGenerator || uuid.create
-		this.$_treeId = this.$_uuidGenerator()
+	constructor(data, options = {}) {
+		this.$_treeId = uuid.create()
 		this.$_cache = new Map()
+		this.$_options = {
+			trackFieldName: options.trackFieldName !== undefined
+				? options.trackFieldName
+				: DEFAULT_TRACK_KEY
+		}
 
-		this.$_root = data ? new Node(data, this.$_uuidGenerator(), this.$_treeId) : null
-		data && this._parse(data, this.$_root)
+		this.$_root = data ? new Node(data, this.$_treeId) : null
+		if (isObject(data)) {
+			this._parse(data, this.$_root)
+		}
 	}
 
 	get root() {
@@ -29,7 +37,10 @@ export class Tree {
 	}
 
 	set root(data) {
-		this.$_root = new Node(data, this.$_uuidGenerator(), this.$_treeId)
+		this.$_root = new Node(data, {
+			...this.$_options,
+			treeId: this.$_treeId
+		})
 	}
 
 	get treeId() {
@@ -112,10 +123,16 @@ export class Tree {
 	 * @param { Node } parent - узел, куда будет достраиваться дерево
 	 */
 	_parse(data, parent) {
-		data.children && data.children.forEach(child => {
-			const childNode = parent.add(new Node(child, this.$_uuidGenerator(), this.$_treeId, parent))
-			this._parse(child, childNode)
-		})
+		if (isArray(data.children)) {
+			data.children.forEach(child => {
+				const childNode = parent.add(new Node(child, {
+					...this.$_options,
+					treeId: this.$_treeId,
+					parent
+				}))
+				this._parse(child, childNode)
+			})
+		}
 	}
 
 	/**
@@ -128,12 +145,22 @@ export class Tree {
 		if (!parent) throw new Error('parent(second argument) require argument')
 
 		if (addAllByOne) {
-			if (!isArray(data)) throw new Error('To add multiple items one at a "data" argument must be an array')
-			const children = data.map((nodeData) => new Node(nodeData, this.$_uuidGenerator(), this.$_treeId, parent))
+			if (!isArray(data)) {
+				throw new Error('To add multiple items one at a "data" argument must be an array')
+			}
+			const children = data.map((nodeData) => new Node(nodeData, {
+				...this.$_options,
+				treeId: this.$_treeId,
+				parent
+			}))
 			parent.add(children);
 			return children
 		} else {
-			const child = new Node(data, this.$_uuidGenerator(), this.$_treeId, parent)
+			const child = new Node(data, {
+				...this.$_options,
+				treeId: this.$_treeId,
+				parent
+			})
 			parent.add(child);
 			return child
 		}
@@ -145,8 +172,15 @@ export class Tree {
 	 */
 	remove(nodeToRemove) {
 		if (nodeToRemove) {
-			const parent = this.search(nodeToRemove.$_parentId, '$_id', true, true)
-			parent[0].remove(nodeToRemove)
+			const parent = this.search(
+				nodeToRemove.$_parentId,
+				this.$_options.trackFieldName,
+				true,
+				true
+			)
+			if (parent[0] !== undefined) {
+				parent[0].remove(nodeToRemove)
+			}
 		} else {
 			throw new Error('first argument required');
 		}
@@ -190,6 +224,6 @@ export class Tree {
 	 * @param { Node } node - проверка, принадлизит ли переданный узел дереву
 	 */
 	belongs(node) {
-		return node instanceof Node && this.$_treeId === node.$_treeId // ToDo: добавить поиск по дереву для проверки
+		return node instanceof Node && this.$_treeId === node.$_treeId
 	}
 }
